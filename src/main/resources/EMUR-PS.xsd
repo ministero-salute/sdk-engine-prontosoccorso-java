@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns="http://flussi.mds.it/flsProSoc" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://flussi.mds.it/flsProSoc" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Accesso">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Identificativo" type="idAccesso"/>
+				<xs:element ref="Erogatore"/>
+				<xs:element ref="Entrata"/>
+				<xs:element name="ModalitaArrivo" type="modalitaArrivo"/>
+				<xs:element ref="CentraleOperativa" minOccurs="0"/>
+				<xs:element name="ResponsabileInvio" type="responsabileInvio"/>
+				<xs:element name="IstitutoProvenienza" type="istitutoProvenienza" minOccurs="0"/>
+				<xs:element name="ProblemaPrincipale" type="problemaPrincipale"/>
+				<xs:element name="Trauma" type="trauma" minOccurs="0"/>
+				<xs:element name="Triage" type="triageAccesso"/>
+				<xs:element ref="Assistito"/>
+				<xs:element ref="Importo" minOccurs="0"/>
+				<xs:element name="TipoTrasmissione" type="tipoTrasmissione"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Assistito">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CUNI" type="Cuni"/>
+				<xs:element name="ValiditaCI" type="validitaCI"/>
+				<xs:element name="TipologiaCI" type="tipologiaCI"/>
+				<xs:element name="CodiceIstituzioneTEAM" type="codIstituzioneTeam" minOccurs="0"/>
+				<xs:element ref="DatiAnagrafici"/>
+				<xs:element ref="Prestazioni"/>
+				<xs:element ref="Dimissione"/>
+				<xs:element name="OBI" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ProblemaClinicoPrincipale" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="3"/>
+										<xs:maxLength value="6"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="DataIngresso" type="xs:date" minOccurs="0"/>
+							<xs:element name="OraIngresso" type="ora" minOccurs="0"/>
+							<xs:element name="PrimaConsulenzaSpecDis" type="specialitaReparto" minOccurs="0"/>
+							<xs:element name="PrimaConsulenzaSpecNum" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value="1"/>
+										<xs:pattern value="2"/>
+										<xs:pattern value="3"/>
+										<xs:pattern value="4"/>
+										<xs:pattern value="5"/>
+										<xs:pattern value="6"/>
+										<xs:pattern value="7"/>
+										<xs:pattern value="8"/>
+										<xs:pattern value="9"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="SecondaConsulenzaSpecDis" type="specialitaReparto" minOccurs="0"/>
+							<xs:element name="SecondaConsulenzaSpecNum" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value="1"/>
+										<xs:pattern value="2"/>
+										<xs:pattern value="3"/>
+										<xs:pattern value="4"/>
+										<xs:pattern value="5"/>
+										<xs:pattern value="6"/>
+										<xs:pattern value="7"/>
+										<xs:pattern value="8"/>
+										<xs:pattern value="9"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Esito" type="esito" minOccurs="0"/>
+							<xs:element name="PrestazionePrincipaleErogata" type="codicePrestazione" minOccurs="0"/>
+							<xs:element name="PrestazioneSecondariaErogata" type="codicePrestazione" minOccurs="0" maxOccurs="4"/>
+							<xs:element name="DiagnosiPrincipaleUscita" type="codiceDiagnosi" minOccurs="0"/>
+							<xs:element name="DiagnosiSecondariaUscita" type="codiceDiagnosi" minOccurs="0" maxOccurs="4"/>
+							<xs:element name="DataUscita" type="xs:date" minOccurs="0"/>
+							<xs:element name="OraUscita" type="ora" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CentraleOperativa">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Identificativo" type="identificativo"/>
+				<xs:element name="CodiceMissione" type="idMissione"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DatiAnagrafici">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Eta"/>
+				<xs:element name="Genere" type="genere"/>
+				<xs:element name="Cittadinanza" type="stato"/>
+				<xs:element ref="Residenza"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Dimissione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="EsitoTrattamento">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="1"/>
+							<xs:maxInclusive value="11"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DataDest" type="xs:date" minOccurs="0"/>
+				<xs:element name="OraDest" type="ora" minOccurs="0"/>
+				<xs:element name="Data" type="xs:date" minOccurs="0"/>
+				<xs:element name="Ora" type="ora" minOccurs="0"/>
+				<xs:element name="Referto" type="referto" minOccurs="0"/>
+				<xs:element name="LivelloAppropriatezzaAccesso" type="livelloAppropriatezza" minOccurs="0"/>
+				<xs:element ref="Ricovero" minOccurs="0"/>
+				<xs:element ref="Trasferimento" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Entrata">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Data" type="xs:date"/>
+				<xs:element name="Ora" type="ora"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Erogatore">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CodiceIstituto" type="codiceIstituto"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Importo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="RegimeErogazione" type="regimeErogazione" minOccurs="0"/>
+				<xs:element name="Lordo" type="importo" minOccurs="0"/>
+				<xs:element name="Ticket" type="importo" minOccurs="0"/>
+				<xs:element name="PosizioneAssistitoTicket" type="posAssistitoTicket" minOccurs="0"/>
+				<xs:element name="CodiceEsenzione" type="codiceEsenzioneTicket" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PresaInCarico">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Data" type="xs:date"/>
+				<xs:element name="Ora" type="ora"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Prestazioni">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PresaInCarico" minOccurs="0"/>
+				<xs:element ref="Diagnosi" minOccurs="0"/>
+				<xs:element ref="Prestazione" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Diagnosi">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DiagnosiPrincipale" minOccurs="0"/>
+				<xs:element ref="DiagnosiSecondaria" minOccurs="0" maxOccurs="4"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Prestazione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PrestazionePrincipale" minOccurs="0"/>
+				<xs:element ref="PrestazioneSecondaria" minOccurs="0" maxOccurs="4"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DiagnosiPrincipale">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="codiceDiagnosi"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DiagnosiSecondaria">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="codiceDiagnosi"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PrestazionePrincipale">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="codicePrestazione"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PrestazioneSecondaria">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="codicePrestazione"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Residenza">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Regione" type="regione"/>
+				<xs:element name="Comune" type="comune"/>
+				<xs:element name="ASL" type="asl" minOccurs="0"/>
+				<xs:element name="StatoEstero" type="stato" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Ricovero">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Progressivo" type="progRicovero"/>
+				<xs:element name="CodiceSpecialitaReparto" type="specialitaReparto"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Trasferimento">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Motivo" type="motivoTrasferimento"/>
+				<xs:element name="Istituto" type="istituto"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="flsProSoc">
+		<xs:complexType mixed="true">
+			<xs:choice>
+				<xs:element ref="Accesso" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="idAccesso">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-2]{1}[0-9]{15}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codiceIstituto">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tipoTrasmissione">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[IVC]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ora">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1})):[0-5]{1}[0-9]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="modalitaArrivo">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-79]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="identificativo">
+		<xs:restriction base="xs:string">
+			<xs:length value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="idMissione">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[2]{1}[0]{1}[0-9]{14}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="responsabileInvio">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-79]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="istitutoProvenienza">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="problemaPrincipale">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="01"/>
+			<xs:pattern value="02"/>
+			<xs:pattern value="03"/>
+			<xs:pattern value="04"/>
+			<xs:pattern value="05"/>
+			<xs:pattern value="06"/>
+			<xs:pattern value="07"/>
+			<xs:pattern value="08"/>
+			<xs:pattern value="09"/>
+			<xs:pattern value="10"/>
+			<xs:pattern value="11"/>
+			<xs:pattern value="12"/>
+			<xs:pattern value="13"/>
+			<xs:pattern value="14"/>
+			<xs:pattern value="15"/>
+			<xs:pattern value="16"/>
+			<xs:pattern value="17"/>
+			<xs:pattern value="18"/>
+			<xs:pattern value="19"/>
+			<xs:pattern value="20"/>
+			<xs:pattern value="21"/>
+			<xs:pattern value="22"/>
+			<xs:pattern value="23"/>
+			<xs:pattern value="24"/>
+			<xs:pattern value="25"/>
+			<xs:pattern value="26"/>
+			<xs:pattern value="27"/>
+			<xs:pattern value="28"/>
+			<xs:pattern value="29"/>
+			<xs:pattern value="30"/>
+			<xs:pattern value="31"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="trauma">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-79]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="triageAccesso">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[12345RGVBNX]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Cuni">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="88"/>
+			<xs:maxLength value="88"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="validitaCI">
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tipologiaCI">
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+			<xs:enumeration value="97"/>
+			<xs:enumeration value="98"/>
+			<xs:enumeration value="99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codIstituzioneTeam">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="28"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Eta">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="Nascita"/>
+				<xs:element name="Presunta" type="etaPresunta"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Nascita">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element name="Anno" type="anno"/>
+				<xs:element name="Mese" type="mese" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="etaPresunta">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-6]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="anno">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-2]{1}[0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="mese">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(0[1-9]{1})|1[0-2]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="genere">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-29]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="stato">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="regione">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="010"/>
+			<xs:pattern value="020"/>
+			<xs:pattern value="030"/>
+			<xs:pattern value="041"/>
+			<xs:pattern value="042"/>
+			<xs:pattern value="050"/>
+			<xs:pattern value="060"/>
+			<xs:pattern value="070"/>
+			<xs:pattern value="080"/>
+			<xs:pattern value="090"/>
+			<xs:pattern value="100"/>
+			<xs:pattern value="110"/>
+			<xs:pattern value="120"/>
+			<xs:pattern value="130"/>
+			<xs:pattern value="140"/>
+			<xs:pattern value="150"/>
+			<xs:pattern value="160"/>
+			<xs:pattern value="170"/>
+			<xs:pattern value="180"/>
+			<xs:pattern value="190"/>
+			<xs:pattern value="200"/>
+			<xs:pattern value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="asl">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="comune">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codicePrestazione">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codiceDiagnosi">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="livelloAppropriatezza">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[12345RGVBN]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="referto">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-39]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="progRicovero">
+		<xs:restriction base="xs:string">
+			<xs:length value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="motivoTrasferimento">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-3]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="regimeErogazione">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-39]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="istituto">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="importo">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="8"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0.01"/>
+			<xs:maxInclusive value="999999.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="posAssistitoTicket">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-9]{1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codiceEsenzioneTicket">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="specialitaReparto">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="esito">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="1"/>
+			<xs:pattern value="2"/>
+			<xs:pattern value="3"/>
+			<xs:pattern value="4"/>
+			<xs:pattern value="5"/>
+			<xs:pattern value="7"/>
+			<xs:pattern value="8"/>
+			<xs:pattern value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

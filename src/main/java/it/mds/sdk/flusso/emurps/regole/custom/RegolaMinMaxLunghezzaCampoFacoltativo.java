@@ -1,0 +1,125 @@
+/* SPDX-License-Identifier: BSD-3-Clause */
+
+package it.mds.sdk.flusso.emurps.regole.custom;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.persistence.oxm.annotations.XmlDiscriminatorValue;
+
+import it.mds.sdk.flusso.emurps.parser.regole.Utilities;
+import it.mds.sdk.flusso.emurps.tracciato.bean.output.DiagnosiSecondaria;
+import it.mds.sdk.flusso.emurps.tracciato.bean.output.PrestazioneSecondaria;
+import it.mds.sdk.gestoreesiti.modelli.Esito;
+import it.mds.sdk.libreriaregole.dtos.RecordDtoGenerico;
+import it.mds.sdk.libreriaregole.exception.ValidazioneImpossibileException;
+import it.mds.sdk.libreriaregole.regole.beans.Parametri;
+import it.mds.sdk.libreriaregole.regole.beans.RegolaGenerica;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@NoArgsConstructor
+@XmlDiscriminatorValue("RegolaMinMaxLunghezzaCampoFacoltativo")
+public class RegolaMinMaxLunghezzaCampoFacoltativo extends RegolaGenerica {
+
+    public RegolaMinMaxLunghezzaCampoFacoltativo(String nomeRegola, String codErrore, String desErrore, Parametri parametri) {
+        super(nomeRegola, codErrore, desErrore, parametri);
+    }
+
+    /**
+     * Verifica che la lunghezza del campo sia esattamente una delle due indicate
+     *
+     * @param nomeCampo         campo da validare
+     * @param recordDtoGenerico DTO del record del flusso
+     * @return lista di {@link it.mds.sdk.gestoreesiti.modelli.Esito}
+     */
+
+    @Override
+    public List<Esito> valida(String nomeCampo, RecordDtoGenerico recordDtoGenerico) {
+        List<Esito> listaEsiti = new ArrayList<>();
+        try {
+        	
+        	String daValidare = null;
+        	List<Object> lst = null;
+        	
+        	String facoltativo = (!StringUtils.isBlank(this.getParametri().getParametriMap().get("facoltativo"))
+    				? String.valueOf(this.getParametri().getParametriMap().get("facoltativo"))
+    				: null);
+    		
+    		boolean bFacoltativo = false;
+    		if ("true".equalsIgnoreCase(facoltativo))
+    			bFacoltativo = true;
+    		
+    		
+        	if (recordDtoGenerico.getCampo(nomeCampo) == null) {
+        		listaEsiti.add(creaEsitoOk(nomeCampo));
+        		return listaEsiti;
+        	
+        	}else if (recordDtoGenerico.getCampo(nomeCampo) instanceof String) {
+        		daValidare = (String) recordDtoGenerico.getCampo(nomeCampo);
+        		eseguiRegolaCustom(nomeCampo, listaEsiti, daValidare, bFacoltativo);
+        	}else if (recordDtoGenerico.getCampo(nomeCampo) instanceof List) {
+        		lst = (List<Object>) recordDtoGenerico.getCampo(nomeCampo);
+        	
+        	if (lst != null && lst.size()<=0 && !bFacoltativo)
+        		listaEsiti.add(creaEsitoKO(nomeCampo,this.getCodErrore(),"La lunghezza del campo errata"));
+        	else {
+    
+	        	Iterator it = lst.iterator();
+		        	while (it.hasNext()) {
+						Object object = (Object) it.next();
+						
+						if (object instanceof DiagnosiSecondaria) {
+							daValidare = ((DiagnosiSecondaria) object).getValue();
+							eseguiRegolaCustom(nomeCampo, listaEsiti, daValidare, bFacoltativo);
+						}else if (object instanceof PrestazioneSecondaria) {
+							daValidare = ((PrestazioneSecondaria) object).getValue();
+							eseguiRegolaCustom(nomeCampo, listaEsiti, daValidare, bFacoltativo);
+						}else if (object instanceof String) {
+							daValidare = String.valueOf(object);
+							eseguiRegolaCustom(nomeCampo, listaEsiti, daValidare, bFacoltativo);
+						}else
+							listaEsiti.add(creaEsitoOk(nomeCampo));
+					}
+        		}
+        	
+	        	if (Utilities.verificaEsitoOK(listaEsiti)) {
+	        		listaEsiti.clear();
+					listaEsiti.add(creaEsitoOk(nomeCampo));	
+	        	}
+	        		
+        	}
+            
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | NumberFormatException e) {
+            log.error("Non è possibile validare la regola lunghezza del campo " + nomeCampo, e);
+            throw new ValidazioneImpossibileException("Non è possibile validare la regola lunghezza del campo " + nomeCampo);
+        }
+        
+        return listaEsiti;
+    }
+
+	private void eseguiRegolaCustom(String nomeCampo, List<Esito> listaEsiti, String daValidare, boolean bFacoltativo) {
+		// la variabile lunghezza credo debba contenere la lunghezza del campo letto dal record
+		Integer lunghezza = StringUtils.isNotBlank(daValidare) ? daValidare.length(): 0;
+		Integer minLunghezza = Integer.parseInt(this.getParametri().getParametriMap().get("minLunghezza"));
+		Integer maxLunghezza = Integer.parseInt(this.getParametri().getParametriMap().get("maxLunghezza"));
+		
+		
+		if (daValidare == null && bFacoltativo) {
+			listaEsiti.add(creaEsitoOk(nomeCampo));
+		}else {
+		    if ((daValidare != null) && (lunghezza >= minLunghezza) && (lunghezza <= maxLunghezza)) {
+		    	listaEsiti.add(creaEsitoOk(nomeCampo));
+		    } else {            	
+		        listaEsiti.add(creaEsitoKO(nomeCampo,this.getCodErrore(),"La lunghezza del campo " + nomeCampo +
+		                " deve essere compresa tra "
+		                + minLunghezza + " o " + maxLunghezza));
+		    }
+		}
+	}
+
+}
