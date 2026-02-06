@@ -117,10 +117,10 @@ public class RegolaEmurPSDataDimissione extends RegolaGenerica {
 				log.error("Non è possibile validare la regola RegolaEmurPSMesePresenzaCondizionataCampo " + nomeCampo, e);
 			throw new ValidazioneImpossibileException("Non è possibile validare la regola RegolaEmurPSMesePresenzaCondizionataCampo " + nomeCampo );
 		}catch (DateTimeParseException dataE) {
-//			Esito esito = creaEsitoKO(nomeCampo,"999","Formato data non corretto");
-//			List<Esito> lst = new ArrayList<Esito>();
-//			lst.add(esito);
-//			Utilities.addErrore(listaEsiti, lst);
+			Esito esito = creaEsitoKO(nomeCampo,"999","Formato data non corretto");
+			List<Esito> lst = new ArrayList<Esito>();
+			lst.add(esito);
+			Utilities.addErrore(listaEsiti, lst);
 		}
 		return listaEsiti;
 	}
